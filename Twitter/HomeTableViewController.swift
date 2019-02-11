@@ -13,10 +13,9 @@ class HomeTableViewController: UITableViewController {
 
     var tweetArray = [NSDictionary]()
     var numOfTweets: Int!
+    
     //for pull down from top
     let tweetRefreshControl = UIRefreshControl()
-
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,8 +24,11 @@ class HomeTableViewController: UITableViewController {
         tweetRefreshControl.addTarget(self, action: #selector(loadTweets), for: .valueChanged)
         self.tableView.refreshControl = tweetRefreshControl
     }
-
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.loadTweets();
+    }
     
     @objc func loadTweets() {
         numOfTweets = 20
@@ -96,6 +98,10 @@ class HomeTableViewController: UITableViewController {
         cell.profilePicture.af_setImage(withURL: imageURL!)
         cell.username.text = (user["name"] as! String)
         cell.tweetText.text = (tweetArray[indexPath.row]["text"] as! String)
+        
+        cell.setFavorite(tweetArray[indexPath.row]["favorited"] as! Bool)
+        cell.setRetweeted(tweetArray[indexPath.row]["retweeted"] as! Bool)
+        cell.tweetId = tweetArray[indexPath.row]["id"] as! Int
         
         return cell
     }
